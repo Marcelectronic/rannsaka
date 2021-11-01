@@ -1,0 +1,127 @@
+{%  extends 'base/base.html' %}
+{%  load static %}
+{% load i18n %}
+{%  block extracss %}
+    <link  href="{% static 'base/styles/base.css' %}" rel="stylesheet">
+{% endblock %}
+{% block extrajs %}
+    <script src="{%  static 'base/scripts/base.js' %}" defer></script>
+{%  endblock %}
+{% block content %}
+    <div class="d-flex justify-content-between w-100 m-0">
+        <div class="flex-grow-1 m-0">
+            <h2>{% translate "SCHEDULE" %}</h2>
+        </div>
+        <div class="flex-grow-0 d-flex justify-content-end pb-1">
+            <button id="schedules_add" type="button" class="btn btn-primary button-min btn-max-size"
+                    data-bs-toggle="modal" data-bs-target="#schedule_add" onclick="typeHandler();">
+                <span class="d-inline-flex flex-row flex-nowrap">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    {% translate "Add" %}
+                </span>
+            </button>
+        </div>
+    </div>
+    <div id="main-table" class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="bg-warning text-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{% translate "Stream" %}</th>
+                <th class="d-none d-sm-table-cell" scope="col">{% translate "Type" %}</th>
+                <th class="d-none d-sm-table-cell" scope="col">{% translate "Period" %}</th>
+                <th class="d-none d-sm-table-cell" scope="col">{% translate "Start" %}</th>
+                <th class="d-none d-sm-table-cell" scope="col">{% translate "End" %}</th>
+                <th scope="col">{% translate "Status" %}</th>
+                <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for schedule in schedules %}
+                <tr>
+                    <th scope="row">{{ schedule.schedule_id }}</th>
+                    <td>{{ schedule.stream }}</td>
+                    <td class="d-none d-sm-table-cell">{{ schedule.run_type }}</td>
+                    <td class="d-none d-sm-table-cell">{{ schedule.period }}</td>
+                    <td class="d-none d-sm-table-cell">{{ schedule.start }}</td>
+                    <td class="d-none d-sm-table-cell">{{ schedule.end }}</td>
+                    <td><span  class="{{ schedule.status_class }}">{{ schedule.status }}</span>
+                    </td>
+                    <td>
+                        <div class="btn-grid">
+                            <div class="btn-grid-element mb-1">
+                                <form action="{% url 'schedule' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="operation-status" value="1">
+                                    <input type="hidden" value="{{ schedule.schedule_id }}" name="schedule-pk">
+                                    <button type="submit" class="btn btn-warning button-min-l button-link btn-sm">
+                                        <i class="bi bi-bookmark-check"></i>
+                                        {{ schedule.status_btn }}
+                                    </button>
+                                </form>
+                            </div>
+                             <div class="btn-grid-element mb-1">
+                                <a class="btn btn-info btn-sm button-min-l button-link"
+                                   href="{% url 'edit_schedule' pk=schedule.schedule_id %}"
+                                   role="button">
+                                    <i class="bi bi-pencil-fill"></i>
+                                    {% translate "Edit" %}
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{%  endblock %}
+
+{% block modalblock %}
+<div class="modal fade" id="schedule_add" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="{% url 'schedule' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="operation-new" value="1">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{% translate "Add Schedule" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% for field in form %}
+                        {% if field.name != 'status' %}
+                            <div class="form-field {% if field.errors %}form-error{% endif %}" id="div_{{ field.auto_id }}">
+                                <label class="form-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+                                {{ field }}
+                                <div class="valid-feedback {% if field.errors %}d-block{% endif %}">
+                                    {{ field.errors }}
+                                </div>
+                            </div>
+                        {%  endif %}
+                        {% if field.name == 'status' %}
+                            <div class="form-field {% if field.errors %}form-error{% endif %}">
+                                <label class="form-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+                                <fieldset>
+                                    {% for radio in field %}
+                                    <div class="form-check form-check-inline">
+                                        {{ radio }}
+                                    </div>
+                                    {% endfor %}
+                                </fieldset>
+                                <div class="valid-feedback {% if field.errors %}d-block{% endif %}">
+                                    {{ field.errors }}
+                                </div>
+                            </div>
+                        {%  endif %}
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Close" %}</button>
+                    <button type="submit" class="btn btn-primary">{% translate "Save changes" %}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

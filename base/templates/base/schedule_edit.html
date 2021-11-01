@@ -1,0 +1,66 @@
+{%  extends 'base/base.html' %}
+{%  load static %}
+{% load i18n %}
+{%  block extracss %}
+    <link  href="{% static 'base/styles/base.css' %}" rel="stylesheet">
+{% endblock %}
+{% block extrajs %}
+    <script src="{%  static 'base/scripts/base.js' %}"></script>
+{%  endblock %}
+{% block content %}
+    <div class="d-flex justify-content-between w-100 m-0">
+        <div class="flex-grow-1 m-0">
+            <h4>{% translate "Edit Schedule" %}:</h4>
+        </div>
+        <div class="flex-grow-0 d-flex justify-content-end pb-1">
+            <form action="{% url 'schedule' %}" method="GET">
+                <button type="submit" class="btn btn-secondary button-min btn-max-size">
+                    <span class="d-inline-flex flex-row flex-nowrap">
+                        <i class="bi bi-arrow-left-circle me-1"></i>
+                        {% translate "Back" %}
+                    </span>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="d-flex w-100 justify-content-center">
+        <form method="POST" class="d-flex justify-content-center w-100 px-1 px-md-3">
+            {% csrf_token %}
+            <input type="hidden" name="operation-edit" value="1">
+            <div class="col-12 col-sm-10 col-md-9 col-lg-8 col-xl-6 basic-form mx-0">
+                <div class="basic-form-body">
+                    {% for field in form %}
+                        {% if field.name != 'status' %}
+                            <div class="form-field basic-form-element mb-1 {% if field.errors %}form-error{% endif %}" id="div_{{ field.auto_id }}">
+                                <label class="form-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+                                {{ field }}
+                                <div class="valid-feedback {% if field.errors %}d-block{% endif %}">
+                                    {{ field.errors }}
+                                </div>
+                            </div>
+                        {%  endif %}
+                        {% if field.name == 'status' %}
+                            <div class="form-field {% if field.errors %}form-error{% endif %}">
+                                <label class="form-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+                                <fieldset>
+                                    {% for radio in field %}
+                                    <div class="form-check form-check-inline">
+                                        {{ radio }}
+                                    </div>
+                                    {% endfor %}
+                                </fieldset>
+                                <div class="valid-feedback {% if field.errors %}d-block{% endif %}">
+                                    {{ field.errors }}
+                                </div>
+                            </div>
+                        {%  endif %}
+                    {% endfor %}
+                </div>
+                <div class="basic-form-footer">
+                    <button type="submit" class="btn btn-primary">{% translate "Save changes" %}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>typeHandler();</script>
+{%  endblock %}

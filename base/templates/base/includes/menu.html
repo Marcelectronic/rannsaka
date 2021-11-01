@@ -1,0 +1,90 @@
+{%  load static %}
+{% load i18n %}
+<nav id="main-navbar" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark px-3 justify-content-start">
+    <a class="navbar-brand d-inline-flex justify-content-center align-items-center" href="{% url 'index' %}">
+        <img class="logo" src="{% static 'global/images/logo.png' %}" alt="{% translate "Home" %}" >
+    </a>
+    <button class="navbar-toggler me-4" type="button" id="menu-btn"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'index' %}">{% translate "Home" %}</a>
+            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'streams' %}">{% translate "Streams" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'runs' %}">{% translate "Runs" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'errors' %}">{% translate "Errors" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'modules' %}">{% translate "Modules" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'schedule' %}">{% translate "Schedule" %}</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'notifications' %}">{% translate "Notifications" %}</a>
+                </li>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">{% translate "Logout" %}</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">{% translate "Login" %}</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div id="extra-btns" class="d-inline-flex flex-row justify-content-center align-content-center text-white h-100">
+        {% if user.is_authenticated %}
+            <ul class="navbar-nav profile-icon">
+                <li class="nav-item">
+                    <a id="profile-icon" class="nav-link" href="{% url 'profile' %}" title="Profile"><i class="bi bi-gear fs-4"></i></a>
+                </li>
+            </ul>
+        {% endif %}
+        <i class="bi bi-brightness-high-fill fs-4"></i>
+        <form id="night_form" action="{% url 'set_night' %}" method="post">
+            <div class="form-check form-switch d-flex flex-row justify-content-center align-content-center fs-4">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.path }}">
+                    <input id="night-switch" name="{{ ctx_dom }}" class="form-check-input" type="checkbox"
+                           id="flexSwitchCheckDefault" value="1"
+                           {% if night_switch == 1 %} %}
+                            checked
+                           {% endif %}
+                    >
+            </div>
+        </form>
+        <i class="bi bi-brightness-high fs-4"></i>
+        <div class="ms-3">
+            <form id="language_form" action="{% url 'set_language' %}" method="post">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+                <select id="language_select" name="language" class="form-select">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% get_available_languages as LANGUAGES %}
+                    {% get_language_info_list for LANGUAGES as languages %}
+                    {% for language in languages %}
+                        <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                            {{ language.name_local }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,13 @@
+<nav aria-label="breadcrumb" class="hidebreadcrumpnav">
+    <ol class="breadcrumb px-3 hidebreadcrump">
+    {% if user.is_authenticated and breadcrumbs|length > 1 %}
+        {% for item in breadcrumbs %}
+            <li class="breadcrumb-item"><a href="{{ item.slug }}">{{ item.name }}</a></li>
+        {% endfor %}
+    {% else %}
+            <li class="breadcrumb-item">&nbsp;</li>
+    {% endif %}
+  </ol>
+</nav>
+
+

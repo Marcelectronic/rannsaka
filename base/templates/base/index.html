@@ -1,0 +1,138 @@
+{%  extends 'base/base.html' %}
+{%  load static %}
+{% load i18n %}
+{%  block extracss %}
+    <link  href="{% static 'base/styles/base.css' %}" rel="stylesheet">
+{% endblock %}
+{% block extrajs %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+{%  endblock %}
+{% block content %}
+    <h2 class="test">DASHBOARD</h2>
+    <div class="container-fluid w-100 m-0 pt-2 pb-5">
+        <div class="row mb-5">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-5 mb-md-0">
+                <div class="card mx-0 mx-sm-1 mx-md-2 mx-lg-3 p-1">
+                    <canvas id="myRuns" width="300" height="150" class="card-img-top"></canvas>
+                    <div class="card-body">
+                        <h4 class="card-title">{% translate "Runs" %}</h4>
+                        <p class="card-text">{% translate "Summary of the processes (streams) run during the last 6 days" %}.</p>
+                        {% if user.is_authenticated %}
+                            <form action="{% url 'runs' %}" method="GET">
+                                <button type="submit" class="btn btn-primary dashboard_schedule">{% translate "Runs" %}</button>
+                             </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+             <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="card mx-0 mx-sm-1 mx-md-2 mx-lg-3 p-1">
+                   <canvas id="myErrors" width="300" height="150" class="card-img-top"></canvas>
+                    <div class="card-body">
+                        <h4 class="card-title">{% translate "Errors" %}</h4>
+                        <p class="card-text">{% translate "Summary of the errors detected running streams during the last 6 days." %}</p>
+                        {% if user.is_authenticated %}
+                            <form action="{% url 'errors' %}" method="GET">
+                                <button type="submit" class="btn btn-primary dashboard_schedule">{% translate "Errors" %}</button>
+                             </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mb-5 mb-md-0">
+                <div class="card mx-0 mx-sm-1 mx-md-2 mx-lg-3">
+                    <div class="card-body">
+                        <h4 class="card-title">{% translate "Notifications Last 7 Days" %}</h4>
+                        <div class="card-text d-flex flex-column">
+                            <div class="d-flex flex-row justify-content-around">
+                                <div class="me-2 fw-bold dashboard_info">{% translate "Notifications Sent" %}</div>
+                                <div class="dashboard_data">{{ notifications.sent }}</div>
+                            </div>
+                            <div class="d-flex flex-row justify-content-around" >
+                                <div class="me-2 fw-bold dashboard_info">{% translate "Notifications Not Sent" %}</div>
+                                <div class="dashboard_data">{{ notifications.notsent }}</div>
+                            </div>
+                        </div>
+                        </p>
+                        {% if user.is_authenticated %}
+                            <form action="{% url 'notifications' %}" method="GET">
+                                <button type="submit" class="btn btn-primary dashboard_schedule">{% translate "Notifications" %}</button>
+                             </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="card mx-0 mx-sm-1 mx-md-2 mx-lg-3">
+                    <div class="card-body">
+                        <h4 class="card-title">{% translate "Scheduled Streams" %}</h4>
+                        <div class="card-text d-flex flex-column">
+                            <div class="d-flex flex-row justify-content-around">
+                                <div class="me-2 fw-bold dashboard_schedule">{% translate "Next" %}</div>
+                                <div class="dashboard_data">{{ schedule.next }}</div>
+                            </div>
+                            <div class="d-flex flex-row justify-content-around" >
+                                <div class="me-2 fw-bold dashboard_schedule">{% translate "Schedule Today" %}</div>
+                                <div class="dashboard_data">{{ schedule.scheduled }}</div>
+                            </div>
+                        </div>
+                        </p>
+                        {% if user.is_authenticated %}
+                            <form action="{% url 'schedule' %}" method="GET">
+                                <button type="submit" class="btn btn-primary dashboard_schedule">{% translate "Schedule" %}</button>
+                             </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const ctxRuns = document.getElementById('myRuns').getContext('2d');
+    const myChartRuns = new Chart(ctxRuns, {
+        type: 'bar',
+        data: {
+            labels: {{ runs_labels|safe }},
+            datasets: [{
+                label: '# of Runs',
+                data: {{ runs_data.data|safe }},
+                backgroundColor: {{ runs_data.backgroundColor|safe }},
+                borderColor: {{ runs_borderColor|safe }},
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    const ctxErrors = document.getElementById('myErrors').getContext('2d');
+    const myChartErrors = new Chart(ctxErrors, {
+        type: 'bar',
+        data: {
+            labels: {{ errors_labels|safe }},
+            datasets: [{
+                label: '# of Errors',
+                data: {{ errors_data.data|safe }},
+                backgroundColor: {{ errors_data.backgroundColor|safe }},
+                borderColor: {{ errors_borderColor|safe }},
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script>
+{%  endblock %}

@@ -1,0 +1,24 @@
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags != 'info' %}
+            <section id="alert-section" class="alert alert-danger alert-dismissible fade show mx-3" role="alert">
+                <i class="bi bi-exclamation-triangle"></i>
+                <span class="me-2"></span>
+                <span{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </section>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% if messages %}
+     {% for message in messages %}
+         {% if message.tags == 'info' %}
+            <section id="info-section" class="alert alert-primary alert-dismissible fade show mx-3" role="alert">
+                <i class="bi bi-info-circle"></i>
+                <span class="me-2"></span>
+                <span{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </section>
+         {% endif %}
+    {% endfor %}
+{% endif %}

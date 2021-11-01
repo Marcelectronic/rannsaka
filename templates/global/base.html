@@ -1,0 +1,42 @@
+{%  load static %}
+{% load compress %}
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" type="image/png" href="{% static 'global/images/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{%  static 'global/styles/bootstrap-icons.css' %}">
+    {% if night_switch == 1 %}
+        {% compress css %}<link type="text/x-scss" href="{% static 'global/styles/night/global_night.scss' %}" rel="stylesheet" media="screen">{% endcompress %}
+    {% else %}
+        {% compress css %}<link type="text/x-scss" href="{% static 'global/styles/day/global_day.scss' %}" rel="stylesheet" media="screen">{% endcompress %}
+    {% endif %}
+    {%  block extracss %}{% endblock %}
+    <script src="{%  static 'global/scripts/bootstrap.min.js' %}" defer></script>
+    <script src="{%  static 'global/scripts/global.js' %}" defer></script>
+    {%  block extrajs %}{% endblock %}
+    <title>Rannsaka</title>
+</head>
+<body>
+    <header>
+        {%  include 'global/includes/header.html' %}
+    </header>
+    {%  block menu %}
+        {%  include 'base/includes/menu.html' %}
+    {% endblock %}
+    <section>
+        {%  include 'global/includes/breadcrumb.html' %}
+    </section>
+    {%  include 'global/includes/error.html' %}
+    <section id="main" class="container-fluid px-1 px-sm-1 px-md-3 px-lg-5 px-xl-5">
+        {%  block content %}{% endblock %}
+    </section>
+    <footer>
+        {%  include 'global/includes/footer.html' %}
+    </footer>
+    {% block modalblock %}{% endblock %}
+</body>
+</html>

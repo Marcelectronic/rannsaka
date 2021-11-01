@@ -1,0 +1,200 @@
+//typography
+@font-face {
+  font-family: "Dosis";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../../fonts/dosis.woff2') format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+//Basic Extend
+%general-row-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-content: flex-start;
+}
+%general-col-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: flex-start;
+}
+
+//Overall css settings
+* {
+  box-sizing: border-box;
+  font-family: "Dosis", sans-serif;
+  font-size: 1.05rem;
+}
+body {
+  background-color: $white;
+}
+
+a {
+  text-decoration: none;
+  color: $blue;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:visited {
+    color: $blue;
+  }
+}
+button {
+  &:focus {
+    outline: none;
+  }
+}
+
+//Layout
+#main {
+  min-height: calc(100vh - 7.7rem);
+
+  &-header {
+    margin-top: 3.5rem;
+  }
+  &-table {
+    overflow-x: hidden;
+  }
+}
+
+.logo {
+    width: 1.9rem;
+    height: 1.9rem;
+    padding: 0;
+    margin: 0;
+}
+.btn-grid {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr ;
+    gap: 0.4rem 0.4rem;
+
+    @media (max-width: 1000px) {
+        & {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+    @media (max-width: 690px) {
+        & {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+//Components - Buttons
+.button {
+    &-link, &-link:visited {
+    color: $white !important;
+  }
+  &-min {
+    min-width: 4rem;
+  }
+  &-min-l {
+    min-width: 6.3rem;
+  }
+}
+
+//Components - Alerts
+.form-field {
+  .errorlist, .infolist {
+    list-style-type:none;
+    padding-left: 0rem;
+
+    & li {
+      padding-left: 0rem;
+    }
+  }
+}
+.alert {
+  .errorlist, .infolist {
+    margin-bottom: 0rem;
+  }
+}
+
+//Components - Basic Form
+.basic-form {
+  @extend %general-col-box;
+  margin: 1rem;
+  border: 1px solid $special-border;
+  padding: 1.5rem;
+
+  input, select, textarea {
+    border: 1px solid $gray-900;
+  }
+
+
+  &-footer {
+    @extend %general-row-box;
+    width: 100%;
+    justify-content: flex-end;
+    padding-top: 1rem;
+  }
+
+  &-body {
+    @extend %general-col-box;
+    width: 100%;
+  }
+
+  &-element {
+    @extend %general-col-box;
+    width: 100%;
+  }
+}
+
+//Components - Login Form
+.login-min-label {
+  min-width: 13rem;
+}
+
+//Profile Icon
+.profile-icon {
+  margin: 0 0 0 0 !important;
+  padding: 0 0 0 0 !important;
+}
+
+.profile-icon nav-item {
+  margin: 0 0 0 0 !important;
+  padding: 0 0 0 0 !important;
+}
+
+#profile-icon {
+  margin: 0 1rem 0 0 !important;
+  padding: 0 0 0 0 !important;
+}
+.hide-menu-btns {
+  display: none !important;
+}
+#extra-btns {
+   @media (min-width: 992px) {
+        & {
+            display: flex !important;
+        }
+    }
+}
+.btn-max-size {
+  max-height: 2.09rem !important;
+}
+.hidebreadcrumpnav {
+   @media (max-width: 500px) {
+        & {
+            height: 2.5rem;
+        }
+    }
+}
+.hidebreadcrump {
+   @media (max-width: 500px) {
+        & {
+            display: none !important;
+        }
+    }
+}
+
+
+
+

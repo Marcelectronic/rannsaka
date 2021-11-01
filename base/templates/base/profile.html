@@ -1,0 +1,14 @@
+{%  extends 'base/base.html' %}
+{%  load static %}
+{% load i18n %}
+{% block content %}
+    <h2 class="">PROFILE</h2>
+    <ul>
+        <li>
+            <a class="" href="{% url 'change_password' %}">{% translate "Change Password" %}</a>
+        </li>
+        <li>
+            <a class="" href="{% url 'logout' %}">{% translate "Logout" %}</a>
+        </li>
+    </ul>
+{%  endblock %}

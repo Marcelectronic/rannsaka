@@ -1,0 +1,90 @@
+{%  extends 'base/base.html' %}
+{%  load static %}
+{% load i18n %}
+{% block extrajs %}
+    <script src="{%  static 'base/scripts/export.js' %}" defer></script>
+{%  endblock %}
+{% block content %}
+    <div class="d-flex justify-content-between w-100 m-0">
+        <div class="flex-grow-1 m-0">
+            <h2>{% translate "NOTIFICATIONS" %}</h2>
+        </div>
+        <div class="flex-grow-0 d-flex justify-content-end pb-1">
+             <button id="export" type="button" class="btn btn-primary button-min btn-max-size"
+                    data-bs-toggle="modal" data-bs-target="#select_date">
+                 <span class="d-inline-flex flex-row flex-nowrap">
+                    <i class="bi bi-file-earmark-font me-1"></i>
+                    {% translate "Export" %}
+                 </span>
+            </button>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="bg-warning text-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{% translate "Stream" %}</th>
+                <th class="d-none d-sm-table-cell" scope="col">{% translate "To" %}</th>
+                <th class="d-none d-sm-table-cell" scope="col">{% translate "Cc" %}</th>
+                <th scope="col">{% translate "Sent" %}</th>
+                <th scope="col">{% translate "Status" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for notification in notifications %}
+                <tr>
+                    <th scope="row">{{ notification.notification_id }}</th>
+                    <td>{{ notification.run_id.stream_id.name }}</td>
+                    <td class="d-none d-sm-table-cell">{{ notification.to }}</td>
+                    <td class="d-none d-sm-table-cell">{{ notification.cc }}</td>
+                    <td>{{ notification.sent }}</td>
+                    <td>{{ notification.status }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="pagination d-flex justify-content-end">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-info btn-sm button-min button-link text-primary" role="button" href="?page=1" >&laquo; {% translate "First" %}</a>
+                    <a class="btn btn-info btn-sm button-min button-link text-primary" role="button" href="?page={{ page_obj.previous_page_number }}">{% translate "Previous" %}</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} {% translate "of" %} {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a class="btn btn-info btn-sm button-min button-link text-primary" role="button" href="?page={{ page_obj.next_page_number }}">{% translate "Next" %}</a>
+                    <a class="btn btn-info btn-sm button-min button-link text-primary" role="button" href="?page={{ page_obj.paginator.num_pages }}">{% translate "Last" %} &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+{%  endblock %}
+
+{% block modalblock %}
+<div class="modal fade" id="select_date" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="{% url 'notifications_export' %}" method="GET" id="date_popup">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{% translate "Export From ID" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-field">
+                        <label class="form-label" for="selected_start">{% translate "From Id" %}</label>
+                        <input type="number" class="form-control" name="selected_start" id="selected_start" value=""/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Close" %}</button>
+                    <button type="submit" class="btn btn-primary">{% translate "Export" %}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

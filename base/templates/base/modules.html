@@ -1,0 +1,105 @@
+{%  extends 'base/base.html' %}
+{%  load static %}
+{% load i18n %}
+{% block extrajs %}
+    <script src="{%  static 'base/scripts/base.js' %}" defer></script>
+{%  endblock %}
+{% block content %}
+    <div class="d-flex justify-content-between w-100 m-0">
+        <div class="flex-grow-1 m-0">
+            <h2>{% translate "MODULES" %}</h2>
+        </div>
+        <div class="flex-grow-0 d-flex justify-content-end pb-1">
+            <button id="modules_add" type="button" class="btn btn-primary button-min btn-max-size"
+                    data-bs-toggle="modal" data-bs-target="#module_add">
+                <span class="d-inline-flex flex-row flex-nowrap">
+                    <i class="bi bi-plus-circle  me-1"></i>
+                    {% translate "Add" %}
+                </span>
+            </button>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="bg-warning text-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{% translate "Module" %}</th>
+                <th class="d-none d-md-table-cell" scope="col">{% translate "File" %}</th>
+                <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for module in modules %}
+                <tr>
+                    <th scope="row">{{ module.module_id }}</th>
+                    <td>{{ module.name }}</td>
+                    <td class="d-none d-md-table-cell">{{ module.file }}</td>
+                    <td>
+                      <div class="btn-grid">
+                         <div class="btn-grid-element mb-1">
+                            <a class="btn btn-primary btn-sm button-min-l button-link"
+                               href="{% url 'edit_module' pk=module.module_id %}"
+                               role="button">
+                                <i class="bi bi-pencil-fill"></i>
+                                {% translate "Edit" %}
+                            </a>
+                        </div>
+                      </div>
+                    </td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="pagination d-flex justify-content-end">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-info btn-sm button-min button-link text-primary" role="button" href="?page=1" >&laquo; {% translate "First" %}</a>
+                    <a class="btn btn-info btn-sm button-min button-link text-primary" role="button" href="?page={{ page_obj.previous_page_number }}">{% translate "Previous" %}</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} {% translate "of" %} {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a class="btn btn-info btn-sm button-min button-link text-primary" role="button" href="?page={{ page_obj.next_page_number }}">{% translate "Next" %}</a>
+                    <a class="btn btn-info btn-sm button-min button-link text-primary" role="button" href="?page={{ page_obj.paginator.num_pages }}">{% translate "Last" %} &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+{%  endblock %}
+
+
+{% block modalblock %}
+<div class="modal fade" id="module_add" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="{% url 'modules' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="operation-new" value="1">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{% translate "Add Module" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% for field in form %}
+                        <div class="form-field {% if field.errors %}form-error{% endif %}">
+                            <label class="form-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+                            {{ field }}
+                            <div class="valid-feedback {% if field.errors %}d-block{% endif %}">
+                                {{ field.errors }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Close" %}</button>
+                    <button type="submit" class="btn btn-primary">{% translate "Save changes" %}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

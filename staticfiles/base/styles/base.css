@@ -1,0 +1,30 @@
+.myform-hidden {
+    display: none !important;
+    color: red !important;
+}
+.dashboard_info {
+    min-width: 10rem;
+}
+
+.dashboard_schedule {
+    min-width: 8rem;
+}
+.dashboard_data {
+    min-width: 4rem;
+}
+
+@media (max-width: 576px) {
+    .dashboard_info {
+        min-width: 7rem;
+    }
+
+    .dashboard_schedule {
+        min-width: 7rem;
+    }
+    .dashboard_data {
+        min-width: 3rem;
+    }
+}
+.btn-common{
+    min-width: 5rem;
+}
